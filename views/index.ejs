@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+
+    <% if (posts.length===0) { %>
+        <div class="post-card">
+            <h2 class="post-title">Welcome to your Journal!</h2>
+            <p>You haven't published any posts yet. Click "New Post" to get started.</p>
+            <a href="/new" class="btn btn-primary">Create First Post</a>
+        </div>
+        <% } else { %>
+            <% posts.forEach(post=> { %>
+                <div class="post-card">
+                    <h2 class="post-title">
+                        <%= post.title %>
+                    </h2>
+                    <p>
+                        <%= post.content.substring(0, 200) + (post.content.length> 200 ? "..." : "") %>
+                    </p>
+
+                    <div class="post-actions">
+                        <a href="/edit/<%= post.id %>" class="btn btn-secondary">Edit</a>
+                        <form action="/delete/<%= post.id %>" method="POST"
+                            style="display: inline; padding: 0; box-shadow: none;">
+                            <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                <% }) %>
+                    <% } %>
+
+                        <%- include('partials/footer') %>
