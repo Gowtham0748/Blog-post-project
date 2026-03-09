@@ -5,21 +5,21 @@
             <%= locals.post ? "Edit Post" : "New Post" %>
         </h2>
 
-        <form action="<%= locals.post ? '/edit/' + post.id : '/new' %>" method="POST"
-            style="box-shadow: none; padding: 0;">
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title" value="<%= locals.post ? post.title : '' %>" required
-                    autocomplete="off">
-            </div>
+    <form action="<%= post ? '/edit/' + post.id : '/new' %>" method="POST">
 
-            <div class="form-group">
-                <label for="content">Content</label>
-                <textarea id="content" name="content" required><%= locals.post ? post.content : '' %></textarea>
-            </div>
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" value="<%= post ? post.title : '' %>" required>
+        </div>
 
-            <button type="submit" class="btn btn-primary">Publish</button>
-        </form>
+        <div class="form-group">
+            <label>Content</label>
+            <textarea name="content"><%= post ? post.content : '' %></textarea>
+        </div>
+
+        <button type="submit">Submit</button>
+
+    </form>
     </div>
 
     <%- include('partials/footer') %>

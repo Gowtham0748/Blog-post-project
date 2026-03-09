@@ -1,54 +1,87 @@
 import express from "express";
 import bodyParser from "body-parser";
+import session from "express-session";
+
+
+import authRoutes from "./routes/auth.js";
+import postRoutes from "./routes/posts.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3020;
 
+//middleware
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let posts = [];
 
-app.get("/", (req, res) => {
-    res.render("index.ejs", { posts: posts });
+//session setup
+app.use(session({
+    secret: "blog-secret",
+    resave: false,
+    saveUninitialized: false
+}));
+
+//view engine
+app.set("view engine","ejs");
+//routes
+app.use("/", authRoutes);
+app.use("/", postRoutes);
+
+//start server
+app.listen(port, ()=>{
+    console.log(`Server running on port ${port}`);
 });
 
-app.get("/new", (req, res) => {
-    res.render("compose.ejs");
-});
 
-app.post("/new", (req, res) => {
-    const post = {
-        id: Date.now().toString(),
-        title: req.body.title,
-        content: req.body.content,
-    };
-    posts.push(post);
-    res.redirect("/");
-});
 
-app.get("/edit/:id", (req, res) => {
-    const post = posts.find((p) => p.id === req.params.id);
-    res.render("compose.ejs", { post: post });
-});
 
-app.post("/edit/:id", (req, res) => {
-    const index = posts.findIndex((p) => p.id === req.params.id);
-    if (index !== -1) {
-        posts[index] = {
-            id: req.params.id,
-            title: req.body.title,
-            content: req.body.content,
-        };
-    }
-    res.redirect("/");
-});
 
-app.post("/delete/:id", (req, res) => {
-    posts = posts.filter((p) => p.id !== req.params.id);
-    res.redirect("/");
-});
 
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// app.get("/", (req, res) => {
+//     res.render("index.ejs", { posts: posts });
+// });
+
+// app.get("/new", (req, res) => {
+//     res.render("compose.ejs");
+// });
+
+// app.post("/new", (req, res) => {
+//     const post = {
+//         id: Date.now().toString(),
+//         title: req.body.title,
+//         content: req.body.content,
+//     };
+//     res.redirect("/");
+// });
+
+// app.get("/edit/:id", (req, res) => {
+//     res.render("compose.ejs", { post: post });
+// });
+
+// app.post("/edit/:id", (req, res) => {
+    
+//     res.redirect("/");
+// });
+
+// app.post("/delete/:id", (req, res) => {
+//     res.redirect("/");
+// });
+
+// app.listen(port, () => {
+//     console.log(`Listening on port ${port}`);
+// });
